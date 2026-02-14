@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCMOTO - PC BUILDER</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="products.js"></script>
+</head>
+<body>
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-content">
+            <span class="close-auth" id="closeAuth">&times;</span>
+            <h2 style="color: var(--text); margin-bottom: 20px;"><i class="fas fa-user-circle"></i> PCMOTO Account</h2>
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-auth="login">Login</button>
+                <button class="auth-tab" data-auth="register">Register</button>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+                <div class="auth-footer">
+                    Don't have an account? 
+                    <button type="button" class="switch-auth" data-auth="register">Register here</button>
+                </div>
+            </form>
+            
+            <form id="registerForm" class="auth-form">
+                <div class="form-group">
+                    <input type="text" id="registerName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerPassword" placeholder="Password (min. 6 characters)" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="registerConfirm" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="auth-btn">Register</button>
+                <div class="auth-footer">
+                    Already have an account? 
+                    <button type="button" class="switch-auth" data-auth="login">Login here</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo" onclick="showAllProducts()" style="cursor: pointer;">
+                    <i class="fas fa-tools"></i>
+                    <h1>PCMOTO</h1>
+                    <span class="tagline">PC FIX</span>
+                </div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search products...">
+                </div>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button class="dark-mode-toggle" id="darkModeToggle">
+                        <i class="fas fa-moon"></i> Dark Mode
+                    </button>
+                    
+                    <div class="user-info" id="userInfo">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <div class="user-menu" id="userMenu">
+                            <span class="user-name" id="userNameDisplay">User</span>
+                            <div class="user-menu-content" id="userMenuContent">
+                                <div class="user-menu-item" id="myBuildsBtn">📁 My Builds</div>
+                                <div class="user-menu-item" id="favoritesBtn">❤️ Favorites</div>
+                                <div class="user-menu-item" id="logoutBtn">🚪 Logout</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" id="authBtn" style="background: white; color: var(--primary); display: flex;">
+                        <i class="fas fa-user"></i> Sign In
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="nav-menu">
+            <a href="#" class="nav-item active" onclick="showAllProducts(event); return false;">HOME</a>
+            <a href="#" class="nav-item" onclick="showAllProducts(event); return false;">PRODUCTS</a>
+            <a href="#" class="nav-item" onclick="showDesktopProducts(event); return false;">DESKTOP</a>
+            <a href="#" class="nav-item" onclick="showLaptopProducts(event); return false;">LAPTOP</a>
+            <a href="#" class="nav-item" onclick="showAllProducts(event); return false;">BUILD A PC</a>
+            <a href="#" class="nav-item" onclick="showRakkProducts(event); return false;">RAKK</a> 
+            <a href="#" class="nav-item" onclick="showRewards(event); return false;">REWARDS</a>
+            <a href="#" class="nav-item" onclick="showBrands(event); return false;">BRANDS</a>
+        </div>
+
+        <div class="main-layout">
+            <div class="category-sidebar">
+                <h3><i class="fas fa-bars"></i> CATEGORIES</h3>
+                
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('processor')">
+                        <span><i class="fas fa-microchip"></i> PROCESSOR</span>
+                        <i class="fas fa-chevron-down" id="icon-processor"></i>
+                    </div>
+                    <div class="category-items" id="category-processor">
+                        <div class="category-item active" onclick="filterByCategory('cpu', 'all', event)">All Processors</div>
+                        <div class="category-item" onclick="filterByCategory('cpu', 'budget', event)">Budget CPUs</div>
+                        <div class="category-item" onclick="filterByCategory('cpu', 'performance', event)">Performance CPUs</div>
+                        <div class="category-item" onclick="filterByCategory('cpu', 'enthusiast', event)">Enthusiast CPUs</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('motherboard')">
+                        <span><i class="fas fa-microchip"></i> MOTHERBOARD</span>
+                        <i class="fas fa-chevron-down" id="icon-motherboard"></i>
+                    </div>
+                    <div class="category-items" id="category-motherboard">
+                        <div class="category-item" onclick="filterByCategory('motherboard', 'all', event)">All Motherboards</div>
+                        <div class="category-item" onclick="filterByCategory('motherboard', 'budget', event)">Budget</div>
+                        <div class="category-item" onclick="filterByCategory('motherboard', 'performance', event)">Performance</div>
+                        <div class="category-item" onclick="filterByCategory('motherboard', 'enthusiast', event)">Enthusiast</div>
+                    </div>
+                </div>
+
+<div class="category-section">
+    <div class="category-header" onclick="toggleCategory('graphics')">
+        <span><i class="fas fa-microchip"></i> GRAPHICS CARD</span>
+        <i class="fas fa-chevron-down" id="icon-graphics"></i>
+    </div>
+                    <div class="category-items" id="category-graphics">
+                        <div class="category-item" onclick="filterByCategory('gpu', 'all', event)">All GPUs</div>
+                        <div class="category-item" onclick="filterByCategory('gpu', 'budget', event)">Budget GPUs</div>
+                        <div class="category-item" onclick="filterByCategory('gpu', 'performance', event)">Performance GPUs</div>
+                        <div class="category-item" onclick="filterByCategory('gpu', 'enthusiast', event)">Enthusiast GPUs</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('memory')">
+                        <span><i class="fas fa-memory"></i> MEMORY (RAM)</span>
+                        <i class="fas fa-chevron-down" id="icon-memory"></i>
+                    </div>
+                    <div class="category-items" id="category-memory">
+                        <div class="category-item" onclick="filterByCategory('ram', 'all', event)">All RAM</div>
+                        <div class="category-item" onclick="filterByCategory('ram', 'budget', event)">Budget RAM</div>
+                        <div class="category-item" onclick="filterByCategory('ram', 'performance', event)">Performance RAM</div>
+                        <div class="category-item" onclick="filterByCategory('ram', 'enthusiast', event)">Enthusiast RAM</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('storage')">
+                        <span><i class="fas fa-database"></i> SOLID STATE DRIVES</span>
+                        <i class="fas fa-chevron-down" id="icon-storage"></i>
+                    </div>
+                    <div class="category-items" id="category-storage">
+                        <div class="category-item" onclick="filterByCategory('ssd', 'all', event)">All SSDs</div>
+                        <div class="category-item" onclick="filterByCategory('ssd', 'budget', event)">Budget SSDs</div>
+                        <div class="category-item" onclick="filterByCategory('ssd', 'performance', event)">Performance SSDs</div>
+                        <div class="category-item" onclick="filterByCategory('ssd', 'enthusiast', event)">Enthusiast SSDs</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('powersupply')">
+                        <span><i class="fas fa-bolt"></i> POWER SUPPLY</span>
+                        <i class="fas fa-chevron-down" id="icon-powersupply"></i>
+                    </div>
+                    <div class="category-items" id="category-powersupply">
+                        <div class="category-item" onclick="filterByCategory('psu', 'all', event)">All PSUs</div>
+                        <div class="category-item" onclick="filterByCategory('psu', 'budget', event)">Budget PSUs</div>
+                        <div class="category-item" onclick="filterByCategory('psu', 'performance', event)">Performance PSUs</div>
+                        <div class="category-item" onclick="filterByCategory('psu', 'enthusiast', event)">Enthusiast PSUs</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('case')">
+                        <span><i class="fas fa-server"></i> PC CASE</span>
+                        <i class="fas fa-chevron-down" id="icon-case"></i>
+                    </div>
+                    <div class="category-items" id="category-case">
+                        <div class="category-item" onclick="filterByCategory('case', 'all', event)">All Cases</div>
+                        <div class="category-item" onclick="filterByCategory('case', 'budget', event)">Budget Cases</div>
+                        <div class="category-item" onclick="filterByCategory('case', 'performance', event)">Performance Cases</div>
+                        <div class="category-item" onclick="filterByCategory('case', 'enthusiast', event)">Enthusiast Cases</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('laptops')">
+                        <span><i class="fas fa-laptop"></i> LAPTOPS</span>
+                        <i class="fas fa-chevron-down" id="icon-laptops"></i>
+                    </div>
+                    <div class="category-items" id="category-laptops">
+                        <div class="category-item" onclick="filterByCategory('laptop', 'all', event)">All Laptops</div>
+                        <div class="category-item" onclick="filterByCategory('laptop', 'budget', event)">Budget Laptops</div>
+                        <div class="category-item" onclick="filterByCategory('laptop', 'performance', event)">Performance Laptops</div>
+                        <div class="category-item" onclick="filterByCategory('laptop', 'enthusiast', event)">Enthusiast Laptops</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('monitors')">
+                        <span><i class="fas fa-tv"></i> MONITORS</span>
+                        <i class="fas fa-chevron-down" id="icon-monitors"></i>
+                    </div>
+                    <div class="category-items" id="category-monitors">
+                        <div class="category-item" onclick="filterByCategory('monitor', 'all', event)">All Monitors</div>
+                        <div class="category-item" onclick="filterByCategory('monitor', 'budget', event)">Budget Monitors</div>
+                        <div class="category-item" onclick="filterByCategory('monitor', 'performance', event)">Performance Monitors</div>
+                        <div class="category-item" onclick="filterByCategory('monitor', 'enthusiast', event)">Enthusiast Monitors</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('keyboards')">
+                        <span><i class="fas fa-keyboard"></i> KEYBOARDS</span>
+                        <i class="fas fa-chevron-down" id="icon-keyboards"></i>
+                    </div>
+                    <div class="category-items" id="category-keyboards">
+                        <div class="category-item" onclick="filterByCategory('keyboard', 'all', event)">All Keyboards</div>
+                        <div class="category-item" onclick="filterByCategory('keyboard', 'budget', event)">Budget Keyboards</div>
+                        <div class="category-item" onclick="filterByCategory('keyboard', 'performance', event)">Performance Keyboards</div>
+                        <div class="category-item" onclick="filterByCategory('keyboard', 'enthusiast', event)">Enthusiast Keyboards</div>
+                    </div>
+                </div>
+
+                <div class="category-section">
+                    <div class="category-header" onclick="toggleCategory('mice')">
+                        <span><i class="fas fa-mouse"></i> MICE</span>
+                        <i class="fas fa-chevron-down" id="icon-mice"></i>
+                    </div>
+                    <div class="category-items" id="category-mice">
+                        <div class="category-item" onclick="filterByCategory('mouse', 'all', event)">All Mice</div>
+                        <div class="category-item" onclick="filterByCategory('mouse', 'budget', event)">Budget Mice</div>
+                        <div class="category-item" onclick="filterByCategory('mouse', 'performance', event)">Performance Mice</div>
+                        <div class="category-item" onclick="filterByCategory('mouse', 'enthusiast', event)">Enthusiast Mice</div>
+                    </div>
+                </div>
+
+                <div class="category-section" style="margin-top: 20px; border-top: 2px solid var(--border); padding-top: 15px;">
+                    <button class="bottleneck-sidebar-btn" id="bottleneckBtn" onclick="openBottleneckCalculator()">
+                        <i class="fas fa-chart-pie"></i> BOTTLENECK CALCULATOR
+                    </button>
+                </div>
+            </div>
+
+            <div class="main-content" id="mainContent">
+            </div>
+
+            <div class="build-sidebar">
+                <h2 class="section-title"><i class="fas fa-tools"></i> YOUR BUILD</h2>
+                
+                <div id="fpsPanel" class="fps-panel" style="display: none;">
+                    <h3>Estimated FPS</h3>
+                    <div id="fpsContent" class="fps-grid"></div>
+                </div>
+                
+                <div id="compatibilityPanel" class="compatibility-panel" style="display: none;">
+                    <h3>Compatibility Check</h3>
+                    <div id="compatibilityList"></div>
+                </div>
+                
+                <div class="selected-parts" id="selectedParts">
+                    <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                        <i class="fas fa-arrow-left" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h3>No items selected</h3>
+                        <p>Click on any product to add to your build</p>
+                    </div>
+                </div>
+                
+                <div class="total-cost">
+                    <span>Total Cost</span>
+                    <span class="total-price" id="totalPrice">₱0</span>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn" id="screenshotBtn" style="background: var(--primary); color: white; flex: 1;">
+                        <i class="fas fa-camera"></i> Screenshot
+                    </button>
+                    <button class="btn" id="pdfBtn" style="background: var(--accent); color: white; flex: 1;">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="bottleneckModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeBottleneck" onclick="document.getElementById('bottleneckModal').style.display='none'">&times;</span>
+            <h2><i class="fas fa-chart-pie"></i> Bottleneck Calculator</h2>
+            
+            <div class="form-group">
+                <label>Select CPU:</label>
+                <select id="bottleneckCPU">
+                    <option value="">-- Select CPU --</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Select GPU:</label>
+                <select id="bottleneckGPU">
+                    <option value="">-- Select GPU --</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Resolution:</label>
+                <select id="bottleneckResolution">
+                    <option value="1080p">1920x1080 (1080p)</option>
+                    <option value="1440p" selected>2560x1440 (1440p)</option>
+                    <option value="4k">3840x2160 (4K)</option>
+                </select>
+            </div>
+            
+            <button id="calculateBottleneck" class="btn" style="background: var(--accent); color: white; width: 100%;" onclick="calculateBottleneck()">
+                <i class="fas fa-calculator"></i> Calculate
+            </button>
+            
+            <div id="bottleneckResult" style="display: none; margin-top: 20px; text-align: center;">
+                <div style="font-size: 3rem; font-weight: 700; color: var(--accent);" id="bottleneckPercentage">0%</div>
+                <div style="font-size: 1.2rem; margin: 10px 0;" id="bottleneckStatus">Balanced</div>
+                <div class="spec-meter" style="height: 20px;">
+                    <div class="meter-fill" id="bottleneckBar" style="width: 0%;"></div>
+                </div>
+                <p id="bottleneckMessage" style="margin-top: 15px;">Your components are well balanced!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="brandsModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close-modal" id="closeBrands" onclick="document.getElementById('brandsModal').style.display='none'">&times;</span>
+            <h2><i class="fas fa-tag"></i> OUR BRANDS</h2>
+            
+            <div class="brands-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; margin-top: 30px;">
+                <div class="brand-item" onclick="filterByBrand('AMD')">
+                    <i class="fab fa-amd" style="font-size: 3rem; color: #ed1c24;"></i>
+                    <h3>AMD</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Intel')">
+                    <i class="fab fa-intel" style="font-size: 3rem; color: #0071c5;"></i>
+                    <h3>Intel</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('NVIDIA')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #76b900;"></i>
+                    <h3>NVIDIA</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Corsair')">
+                    <i class="fas fa-memory" style="font-size: 3rem; color: #00aef0;"></i>
+                    <h3>Corsair</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Samsung')">
+                    <i class="fas fa-database" style="font-size: 3rem; color: #0099ff;"></i>
+                    <h3>Samsung</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Seasonic')">
+                    <i class="fas fa-server" style="font-size: 3rem; color: #666;"></i>
+                    <h3>Seasonic</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('G.Skill')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #00b140;"></i>
+                    <h3>G.Skill</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('ASUS')">
+                    <i class="fas fa-laptop" style="font-size: 3rem; color: #0066b0;"></i>
+                    <h3>ASUS</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Gigabyte')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #ff6600;"></i>
+                    <h3>Gigabyte</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('MSI')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #d82c20;"></i>
+                    <h3>MSI</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Kingston')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #0033a0;"></i>
+                    <h3>Kingston</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('RAKK')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #ff4d00;"></i>
+                    <h3>RAKK</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Western Digital')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #003087;"></i>
+                    <h3>Western Digital</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Crucial')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #009ddc;"></i>
+                    <h3>Crucial</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('TeamGroup')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #ef3b2d;"></i>
+                    <h3>TeamGroup</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('EVGA')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #00a4e4;"></i>
+                    <h3>EVGA</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Logitech')">
+                    <i class="fas fa-mouse" style="font-size: 3rem; color: #00b8fc;"></i>
+                    <h3>Logitech</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Razer')">
+                    <i class="fas fa-snake" style="font-size: 3rem; color: #44d62c;"></i>
+                    <h3>Razer</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('SteelSeries')">
+                    <i class="fas fa-microchip" style="font-size: 3rem; color: #ff5400;"></i>
+                    <h3>SteelSeries</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Redragon')">
+                    <i class="fas fa-dragon" style="font-size: 3rem; color: #d42e12;"></i>
+                    <h3>Redragon</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Acer')">
+                    <i class="fas fa-laptop" style="font-size: 3rem; color: #83b81a;"></i>
+                    <h3>Acer</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('KOORUI')">
+                    <i class="fas fa-tv" style="font-size: 3rem; color: #0055a4;"></i>
+                    <h3>KOORUI</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('LG')">
+                    <i class="fas fa-tv" style="font-size: 3rem; color: #c00;"></i>
+                    <h3>LG</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('ViewSonic')">
+                    <i class="fas fa-tv" style="font-size: 3rem; color: #0066a1;"></i>
+                    <h3>ViewSonic</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Lenovo')">
+                    <i class="fas fa-laptop" style="font-size: 3rem; color: #e2231a;"></i>
+                    <h3>Lenovo</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('HP')">
+                    <i class="fas fa-laptop" style="font-size: 3rem; color: #0096d6;"></i>
+                    <h3>HP</h3>
+                </div>
+                <div class="brand-item" onclick="filterByBrand('Dell')">
+                    <i class="fas fa-laptop" style="font-size: 3rem; color: #007db8;"></i>
+                    <h3>Dell</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTotal = 0;
+        let selectedItems = [];
+
+        function showAllProducts(event) {
+            if (!event) event = window.event;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
+            loadAllProducts();
+        }
+
+        function showDesktopProducts(event) {
+            if (!event) event = window.event;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
+            loadDesktopProducts();
+        }
+
+        function showLaptopProducts(event) {
+            if (!event) event = window.event;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
+            loadLaptopProducts();
+        }
+
+        function showRakkProducts(event) {
+            if (!event) event = window.event;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
+            loadRakkProducts();
+        }
+
+        function showRewards(event) {
+            if (!event) event = window.event;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
+            
+            document.getElementById('mainContent').innerHTML = `
+                <div class="rewards-center">
+                    <h2><i class="fas fa-gift"></i> PCMOTO REWARDS</h2>
+                    <div class="rewards-grid">
+                        <div class="reward-card">
+                            <div class="reward-points">100 pts</div>
+                            <h3>₱100 Discount</h3>
+                            <p>On your next purchase</p>
+                            <button class="btn" style="background: var(--accent);">Redeem</button>
+                        </div>
+                        <div class="reward-card">
+                            <div class="reward-points">250 pts</div>
+                            <h3>Free Shipping</h3>
+                            <p>On any order</p>
+                            <button class="btn" style="background: var(--accent);">Redeem</button>
+                        </div>
+                        <div class="reward-card">
+                            <div class="reward-points">500 pts</div>
+                            <h3>Free RAM Upgrade</h3>
+                            <p>8GB DDR4 RAM</p>
+                            <button class="btn" style="background: var(--accent);">Redeem</button>
+                        </div>
+                        <div class="reward-card">
+                            <div class="reward-points">1000 pts</div>
+                            <h3>Free SSD</h3>
+                            <p>480GB SATA SSD</p>
+                            <button class="btn" style="background: var(--accent);">Redeem</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showBrands(event) {
+            if (!event) event = window.event;
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (event && event.target) event.target.classList.add('active');
+            
+            document.getElementById('brandsModal').style.display = 'flex';
+        }
+
+        function loadAllProducts() {
+            let html = '';
+            
+            html += `
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fab fa-amd"></i> AMD PROCESSORS</h2>
+                    <div class="products-grid">
+                        ${getAMDProcessors()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fab fa-intel"></i> INTEL PROCESSORS</h2>
+                    <div class="products-grid">
+                        ${getIntelProcessors()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-gpu"></i> GRAPHICS CARDS</h2>
+                    <div class="products-grid">
+                        ${getGraphicsCards()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-memory"></i> MEMORY (RAM)</h2>
+                    <div class="products-grid">
+                        ${getRAM()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-database"></i> SOLID STATE DRIVES</h2>
+                    <div class="products-grid">
+                        ${getSSDs()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-microchip"></i> MOTHERBOARDS</h2>
+                    <div class="products-grid">
+                        ${getMotherboards()}
+                    </div>
+                </div>
+                
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+            attachAddToBuildListeners();
+        }
+
+        function loadDesktopProducts() {
+            let html = '';
+            
+            html += `
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fab fa-amd"></i> AMD PROCESSORS</h2>
+                    <div class="products-grid">
+                        ${getAMDProcessors()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fab fa-intel"></i> INTEL PROCESSORS</h2>
+                    <div class="products-grid">
+                        ${getIntelProcessors()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-gpu"></i> GRAPHICS CARDS</h2>
+                    <div class="products-grid">
+                        ${getGraphicsCards()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-memory"></i> MEMORY (RAM)</h2>
+                    <div class="products-grid">
+                        ${getRAM()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-database"></i> SOLID STATE DRIVES</h2>
+                    <div class="products-grid">
+                        ${getSSDs()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-microchip"></i> MOTHERBOARDS</h2>
+                    <div class="products-grid">
+                        ${getMotherboards()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-server"></i> PC CASES</h2>
+                    <div class="products-grid">
+                        ${getCases()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-bolt"></i> POWER SUPPLIES</h2>
+                    <div class="products-grid">
+                        ${getPSUs()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-keyboard"></i> KEYBOARDS</h2>
+                    <div class="products-grid">
+                        ${getKeyboards()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-mouse"></i> MICE</h2>
+                    <div class="products-grid">
+                        ${getMice()}
+                    </div>
+                </div>
+                
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-tv"></i> MONITORS</h2>
+                    <div class="products-grid">
+                        ${getMonitors()}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+            attachAddToBuildListeners();
+        }
+
+        function loadLaptopProducts() {
+            let html = `
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-laptop"></i> LAPTOPS</h2>
+                    <div class="products-grid">
+                        ${getLaptops()}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+            attachAddToBuildListeners();
+        }
+
+        function loadRakkProducts() {
+            let html = `
+                <div class="products-section">
+                    <h2 class="section-title"><i class="fas fa-microchip"></i> RAKK PRODUCTS</h2>
+                    <div class="products-grid">
+                        <div class="product-card" data-category="case" data-price="1799" data-name="RAKK Haliya" data-tier="budget" data-max-gpu-length="320" data-form="ATX">
+                            <img src="Images/rakk Haliya.jpg" alt="RAKK Haliya" onerror="this.src='https://via.placeholder.com/150'">
+                            <div class="product-info">
+                                <h3>RAKK Haliya</h3>
+                                <p class="product-specs">ATX, 4x120mm Fans</p>
+                                <div class="product-price">₱1,799</div>
+                                <div class="product-badge budget">BUDGET</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.5 (234)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="case" data-price="1999" data-name="RAKK Haliya Pro" data-tier="budget" data-max-gpu-length="340" data-form="ATX">
+                            <img src="https://via.placeholder.com/150" alt="RAKK Haliya Pro">
+                            <div class="product-info">
+                                <h3>RAKK Haliya Pro</h3>
+                                <p class="product-specs">ATX, 4x120mm ARGB Fans, TG</p>
+                                <div class="product-price">₱1,999</div>
+                                <div class="product-badge budget">BUDGET</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.6 (156)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="keyboard" data-price="1299" data-name="RAKK Pluma" data-tier="budget">
+                            <img src="Images/RAKK Pluma.jpg" alt="RAKK Pluma" onerror="this.src='https://via.placeholder.com/150'">
+                            <div class="product-info">
+                                <h3>RAKK Pluma</h3>
+                                <p class="product-specs">Mechanical, Blue Switch, RGB</p>
+                                <div class="product-price">₱1,299</div>
+                                <div class="product-badge budget">BUDGET</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.7 (345)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="keyboard" data-price="1899" data-name="RAKK Pluma Pro" data-tier="performance">
+                            <img src="https://via.placeholder.com/150" alt="RAKK Pluma Pro">
+                            <div class="product-info">
+                                <h3>RAKK Pluma Pro</h3>
+                                <p class="product-specs">Mechanical, Hot-swappable, RGB</p>
+                                <div class="product-price">₱1,899</div>
+                                <div class="product-badge performance">PERFORMANCE</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.8 (234)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="mouse" data-price="599" data-name="RAKK Tanay" data-tier="budget">
+                            <img src="https://via.placeholder.com/150" alt="RAKK Tanay">
+                            <div class="product-info">
+                                <h3>RAKK Tanay</h3>
+                                <p class="product-specs">Wired, 3200 DPI, RGB</p>
+                                <div class="product-price">₱599</div>
+                                <div class="product-badge budget">BUDGET</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.5 (567)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="mouse" data-price="899" data-name="RAKK Tanay Pro" data-tier="performance">
+                            <img src="https://via.placeholder.com/150" alt="RAKK Tanay Pro">
+                            <div class="product-info">
+                                <h3>RAKK Tanay Pro</h3>
+                                <p class="product-specs">Wired, 6400 DPI, RGB, Weight Tuning</p>
+                                <div class="product-price">₱899</div>
+                                <div class="product-badge performance">PERFORMANCE</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.7 (345)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="mouse" data-price="1299" data-name="RAKK Tanay Wireless" data-tier="performance">
+                            <img src="https://via.placeholder.com/150" alt="RAKK Tanay Wireless">
+                            <div class="product-info">
+                                <h3>RAKK Tanay Wireless</h3>
+                                <p class="product-specs">Wireless, 16000 DPI, RGB</p>
+                                <div class="product-price">₱1,299</div>
+                                <div class="product-badge performance">PERFORMANCE</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.8 (234)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="case" data-price="2499" data-name="RAKK AERIS" data-tier="performance">
+                            <img src="https://via.placeholder.com/150" alt="RAKK AERIS">
+                            <div class="product-info">
+                                <h3>RAKK AERIS</h3>
+                                <p class="product-specs">mATX, Mesh, 3x ARGB Fans</p>
+                                <div class="product-price">₱2,499</div>
+                                <div class="product-badge performance">PERFORMANCE</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.8 (189)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-card" data-category="case" data-price="3299" data-name="RAKK MARIS" data-tier="performance">
+                            <img src="https://via.placeholder.com/150" alt="RAKK MARIS">
+                            <div class="product-info">
+                                <h3>RAKK MARIS</h3>
+                                <p class="product-specs">ATX, Mesh, 4x ARGB Fans, TG</p>
+                                <div class="product-price">₱3,299</div>
+                                <div class="product-badge performance">PERFORMANCE</div>
+                                <div class="product-rating"><i class="fas fa-star"></i> 4.9 (267)</div>
+                                <button class="add-to-build">+ Add to Build</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = html;
+            attachAddToBuildListeners();
+        }
+
+        function attachAddToBuildListeners() {
+            document.querySelectorAll('.add-to-build').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    addToBuild(this);
+                });
+            });
+        }
+
+        function toggleCategory(category) {
+            const items = document.getElementById(`category-${category}`);
+            const icon = document.getElementById(`icon-${category}`);
+            
+            if (items.style.display === 'none' || items.style.display === '') {
+                items.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+            } else {
+                items.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+            }
+        }
+
+        function filterByCategory(category, tier, event) {
+            if (!event) event = window.event;
+            
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (event && event.target) event.target.classList.add('active');
+            
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                const productCategory = product.dataset.category;
+                const productTier = product.dataset.tier;
+                
+                if (tier === 'all') {
+                    if (productCategory === category) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                } else {
+                    if (productCategory === category && productTier === tier) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function filterByBrand(brand) {
+            document.getElementById('brandsModal').style.display = 'none';
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                const name = product.dataset.name || '';
+                if (name.includes(brand)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+        }
+
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            darkModeToggle.innerHTML = isDark ? 
+                '<i class="fas fa-sun"></i> Light Mode' : 
+                '<i class="fas fa-moon"></i> Dark Mode';
+            localStorage.setItem('pcmoto-dark-mode', isDark ? 'dark' : 'light');
+        });
+
+        const savedDarkMode = localStorage.getItem('pcmoto-dark-mode');
+        if (savedDarkMode === 'dark') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+        }
+
+        const USERS_KEY = 'pcmoto_users';
+        const SESSION_KEY = 'pcmoto_session';
+
+        if (!localStorage.getItem(USERS_KEY)) {
+            localStorage.setItem(USERS_KEY, JSON.stringify([]));
+        }
+
+        function getUsers() {
+            return JSON.parse(localStorage.getItem(USERS_KEY));
+        }
+
+        function getCurrentUser() {
+            const session = localStorage.getItem(SESSION_KEY);
+            return session ? JSON.parse(session) : null;
+        }
+
+        function updateAuthUI() {
+            const user = getCurrentUser();
+            const authBtn = document.getElementById('authBtn');
+            const userInfo = document.getElementById('userInfo');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const userAvatar = document.getElementById('userAvatar');
+
+            if (user) {
+                authBtn.style.display = 'none';
+                userInfo.style.display = 'flex';
+                userNameDisplay.textContent = user.name || 'User';
+                userAvatar.textContent = user.name.charAt(0).toUpperCase();
+            } else {
+                authBtn.style.display = 'flex';
+                userInfo.style.display = 'none';
+            }
+        }
+
+        const authModal = document.getElementById('authModal');
+        const authBtn = document.getElementById('authBtn');
+        const closeAuth = document.getElementById('closeAuth');
+
+        authBtn.addEventListener('click', () => authModal.style.display = 'flex');
+        closeAuth.addEventListener('click', () => authModal.style.display = 'none');
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === authModal) authModal.style.display = 'none';
+        });
+
+        document.querySelectorAll('.auth-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('loginForm').classList.remove('active');
+                document.getElementById('registerForm').classList.remove('active');
+                if (this.dataset.auth === 'login') {
+                    document.getElementById('loginForm').classList.add('active');
+                } else {
+                    document.getElementById('registerForm').classList.add('active');
+                }
+            });
+        });
+
+        document.querySelectorAll('.switch-auth').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const authType = this.dataset.auth;
+                document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+                if (authType === 'login') {
+                    document.querySelector('[data-auth="login"]').classList.add('active');
+                    document.getElementById('loginForm').classList.add('active');
+                } else {
+                    document.querySelector('[data-auth="register"]').classList.add('active');
+                    document.getElementById('registerForm').classList.add('active');
+                }
+            });
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirm = document.getElementById('registerConfirm').value;
+
+            if (!name || !email || !password) {
+                alert('Please fill all fields');
+                return;
+            }
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters');
+                return;
+            }
+            if (password !== confirm) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            const users = getUsers();
+            if (users.find(u => u.email === email)) {
+                alert('Email already registered');
+                return;
+            }
+
+            const newUser = { name, email, password, builds: [], favorites: [] };
+            users.push(newUser);
+            localStorage.setItem(USERS_KEY, JSON.stringify(users));
+            localStorage.setItem(SESSION_KEY, JSON.stringify({ name, email }));
+            authModal.style.display = 'none';
+            updateAuthUI();
+            alert(`✅ Welcome, ${name}!`);
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const users = getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                localStorage.setItem(SESSION_KEY, JSON.stringify({ name: user.name, email: user.email }));
+                authModal.style.display = 'none';
+                updateAuthUI();
+                alert(`✅ Welcome back, ${user.name}!`);
+            } else {
+                alert('❌ Invalid email or password');
+            }
+        });
+
+        // User menu click toggle
+        document.getElementById('userMenu').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const content = document.getElementById('userMenuContent');
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+            } else {
+                content.style.display = 'block';
+            }
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function() {
+            const content = document.getElementById('userMenuContent');
+            if (content) {
+                content.style.display = 'none';
+            }
+        });
+
+        // Prevent closing when clicking inside the menu
+        document.getElementById('userMenuContent').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // My Builds button
+        document.getElementById('myBuildsBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const user = getCurrentUser();
+            if (!user) {
+                alert('Please login first to save your builds');
+                document.getElementById('authModal').style.display = 'flex';
+                document.getElementById('userMenuContent').style.display = 'none';
+                return;
+            }
+
+            const users = getUsers();
+            const currentUser = users.find(u => u.email === user.email);
+            
+            if (!currentUser.builds) {
+                currentUser.builds = [];
+            }
+
+            if (selectedItems.length > 0) {
+                const buildName = prompt('Enter a name for this build:', `My Build ${currentUser.builds.length + 1}`);
+                if (buildName) {
+                    const newBuild = {
+                        id: Date.now(),
+                        name: buildName,
+                        date: new Date().toLocaleDateString(),
+                        items: [...selectedItems],
+                        total: currentTotal
+                    };
+                    currentUser.builds.push(newBuild);
+                    localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                    alert(`✅ Build "${buildName}" saved successfully!`);
+                }
+            } else {
+                if (currentUser.builds.length === 0) {
+                    alert('No saved builds yet. Add items to your build and save them!');
+                    document.getElementById('userMenuContent').style.display = 'none';
+                    return;
+                }
+
+                let buildList = '📁 YOUR SAVED BUILDS:\n\n';
+                currentUser.builds.forEach((build, index) => {
+                    buildList += `${index + 1}. ${build.name} - ₱${build.total.toLocaleString()} (${build.date})\n`;
+                });
+                buildList += '\nEnter build number to load (or Cancel)';
+                
+                const choice = prompt(buildList);
+                if (choice) {
+                    const buildIndex = parseInt(choice) - 1;
+                    if (buildIndex >= 0 && buildIndex < currentUser.builds.length) {
+                        const build = currentUser.builds[buildIndex];
+                        
+                        document.querySelectorAll('.product-card.selected').forEach(card => {
+                            card.classList.remove('selected');
+                            const btn = card.querySelector('.add-to-build');
+                            if (btn) {
+                                btn.innerHTML = '+ Add to Build';
+                                btn.style.background = 'var(--primary)';
+                            }
+                        });
+                        
+                        selectedItems = [];
+                        currentTotal = 0;
+                        
+                        build.items.forEach(item => {
+                            const cards = document.querySelectorAll('.product-card');
+                            cards.forEach(card => {
+                                if (card.dataset.name === item.name) {
+                                    card.classList.add('selected');
+                                    const btn = card.querySelector('.add-to-build');
+                                    if (btn) {
+                                        btn.innerHTML = '✓ Added';
+                                        btn.style.background = 'var(--success)';
+                                    }
+                                }
+                            });
+                            selectedItems.push(item);
+                            currentTotal += item.price;
+                        });
+                        
+                        updateBuildDisplay();
+                        updateFPS();
+                        checkCompatibility();
+                        alert(`✅ Build "${build.name}" loaded successfully!`);
+                    }
+                }
+            }
+            document.getElementById('userMenuContent').style.display = 'none';
+        });
+
+        // Favorites button
+        document.getElementById('favoritesBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const user = getCurrentUser();
+            if (!user) {
+                alert('Please login first to save favorites');
+                document.getElementById('authModal').style.display = 'flex';
+                document.getElementById('userMenuContent').style.display = 'none';
+                return;
+            }
+
+            const users = getUsers();
+            const currentUser = users.find(u => u.email === user.email);
+            
+            if (!currentUser.favorites) {
+                currentUser.favorites = [];
+            }
+
+            const selectedCards = document.querySelectorAll('.product-card.selected');
+            
+            if (selectedCards.length > 0) {
+                selectedCards.forEach(card => {
+                    const item = {
+                        name: card.dataset.name,
+                        price: parseInt(card.dataset.price) || 0,
+                        category: card.dataset.category,
+                        dataset: card.dataset
+                    };
+                    
+                    if (!currentUser.favorites.some(fav => fav.name === item.name)) {
+                        currentUser.favorites.push(item);
+                    }
+                });
+                
+                localStorage.setItem(USERS_KEY, JSON.stringify(users));
+                alert(`❤️ Added ${selectedCards.length} item(s) to favorites!`);
+            } else {
+                if (currentUser.favorites.length === 0) {
+                    alert('No favorites yet. Select items and add them to favorites!');
+                    document.getElementById('userMenuContent').style.display = 'none';
+                    return;
+                }
+
+                let favList = '❤️ YOUR FAVORITES:\n\n';
+                currentUser.favorites.forEach((item, index) => {
+                    favList += `${index + 1}. ${item.name} - ₱${item.price.toLocaleString()}\n`;
+                });
+                favList += '\nEnter item number to add to build (or Cancel)';
+                
+                const choice = prompt(favList);
+                if (choice) {
+                    const favIndex = parseInt(choice) - 1;
+                    if (favIndex >= 0 && favIndex < currentUser.favorites.length) {
+                        const favorite = currentUser.favorites[favIndex];
+                        
+                        const cards = document.querySelectorAll('.product-card');
+                        cards.forEach(card => {
+                            if (card.dataset.name === favorite.name && !card.classList.contains('selected')) {
+                                card.classList.add('selected');
+                                const btn = card.querySelector('.add-to-build');
+                                if (btn) {
+                                    btn.innerHTML = '✓ Added';
+                                    btn.style.background = 'var(--success)';
+                                }
+                                
+                                selectedItems.push({
+                                    name: favorite.name,
+                                    price: favorite.price,
+                                    category: favorite.category,
+                                    dataset: card.dataset
+                                });
+                                currentTotal += favorite.price;
+                            }
+                        });
+                        
+                        updateBuildDisplay();
+                        updateFPS();
+                        checkCompatibility();
+                        alert(`✅ Added "${favorite.name}" to your build!`);
+                    }
+                }
+            }
+            document.getElementById('userMenuContent').style.display = 'none';
+        });
+
+        // Logout button
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            localStorage.removeItem(SESSION_KEY);
+            updateAuthUI();
+            
+            document.querySelectorAll('.product-card.selected').forEach(card => {
+                card.classList.remove('selected');
+                const btn = card.querySelector('.add-to-build');
+                if (btn) {
+                    btn.innerHTML = '+ Add to Build';
+                    btn.style.background = 'var(--primary)';
+                }
+            });
+            
+            selectedItems = [];
+            currentTotal = 0;
+            updateBuildDisplay();
+            document.getElementById('fpsPanel').style.display = 'none';
+            document.getElementById('compatibilityPanel').style.display = 'none';
+            
+            alert('👋 Logged out successfully');
+            document.getElementById('userMenuContent').style.display = 'none';
+        });
+
+        function addToBuild(button) {
+            const card = button.closest('.product-card');
+            const price = parseInt(card.dataset.price) || 0;
+            const name = card.dataset.name || 'Component';
+            const category = card.dataset.category || 'other';
+            
+            if (card.classList.contains('selected')) {
+                card.classList.remove('selected');
+                currentTotal -= price;
+                selectedItems = selectedItems.filter(item => item.name !== name);
+                button.innerHTML = '+ Add to Build';
+                button.style.background = 'var(--primary)';
+            } else {
+                card.classList.add('selected');
+                currentTotal += price;
+                selectedItems.push({ name, price, category, dataset: card.dataset });
+                button.innerHTML = '✓ Added';
+                button.style.background = 'var(--success)';
+            }
+            
+            updateBuildDisplay();
+            updateFPS();
+            checkCompatibility();
+        }
+
+        function updateBuildDisplay() {
+            document.getElementById('totalPrice').textContent = '₱' + currentTotal.toLocaleString();
+            
+            if (selectedItems.length > 0) {
+                let html = '<h3 style="margin-bottom: 15px;">Selected Components:</h3>';
+                selectedItems.forEach(item => {
+                    html += `<div class="selected-item">
+                                <span>${item.name}</span>
+                                <span style="font-weight: 600; color: var(--accent);">₱${item.price.toLocaleString()}</span>
+                            </div>`;
+                });
+                html += `<div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid var(--border);">
+                            <div style="display: flex; justify-content: space-between; font-size: 1.2rem;">
+                                <span><strong>Total:</strong></span>
+                                <span style="font-weight: 700; color: var(--accent);">₱${currentTotal.toLocaleString()}</span>
+                            </div>
+                        </div>`;
+                document.getElementById('selectedParts').innerHTML = html;
+            } else {
+                document.getElementById('selectedParts').innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                    <i class="fas fa-arrow-left" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                    <h3>No items selected</h3>
+                    <p>Click on any product to add to your build</p>
+                </div>`;
+            }
+        }
+
+        function updateFPS() {
+            let cpuPerf = 0, gpuPerf = 0;
+            
+            const laptop = selectedItems.find(item => item.category === 'laptop');
+            if (laptop) {
+                cpuPerf = parseInt(laptop.dataset.cpuPerf) || 0;
+                gpuPerf = parseInt(laptop.dataset.gpuPerf) || 0;
+            } else {
+                const cpu = selectedItems.find(item => item.category === 'cpu');
+                const gpu = selectedItems.find(item => item.category === 'gpu');
+                if (cpu) cpuPerf = parseInt(cpu.dataset.perf) || 0;
+                if (gpu) gpuPerf = parseInt(gpu.dataset.perf) || 0;
+            }
+            
+            if (cpuPerf === 0 || gpuPerf === 0) {
+                document.getElementById('fpsPanel').style.display = 'none';
+                return;
+            }
+            
+            const avgPerf = (cpuPerf + gpuPerf) / 2;
+            
+            const valorant = Math.round(avgPerf * 2.2);
+            const gta5 = Math.round(avgPerf * 1.5);
+            const cyberpunk = Math.round(avgPerf * 0.9);
+            
+            document.getElementById('fpsContent').innerHTML = `
+                <div class="fps-card">
+                    <div>🎯 Valorant</div>
+                    <div class="fps-value">${valorant} FPS</div>
+                </div>
+                <div class="fps-card">
+                    <div>🚗 GTA V</div>
+                    <div class="fps-value">${gta5} FPS</div>
+                </div>
+                <div class="fps-card">
+                    <div>🌃 Cyberpunk</div>
+                    <div class="fps-value">${cyberpunk} FPS</div>
+                </div>
+            `;
+            document.getElementById('fpsPanel').style.display = 'block';
+        }
+
+        function checkCompatibility() {
+            const warnings = [];
+            
+            const cpu = selectedItems.find(item => item.category === 'cpu');
+            const gpu = selectedItems.find(item => item.category === 'gpu');
+            const motherboard = selectedItems.find(item => item.category === 'motherboard');
+            const pcCase = selectedItems.find(item => item.category === 'case');
+            const psu = selectedItems.find(item => item.category === 'psu');
+            
+            if (cpu && motherboard && cpu.dataset.socket !== motherboard.dataset.socket) {
+                warnings.push({ type: 'critical', msg: `❌ CPU socket (${cpu.dataset.socket}) does not match motherboard (${motherboard.dataset.socket})` });
+            }
+            
+            if (gpu && pcCase) {
+                const gpuLength = parseInt(gpu.dataset.length) || 0;
+                const caseMaxLength = parseInt(pcCase.dataset.maxGpuLength) || 0;
+                if (gpuLength > 0 && caseMaxLength > 0 && gpuLength > caseMaxLength) {
+                    warnings.push({ type: 'critical', msg: `❌ GPU length (${gpuLength}mm) exceeds case max (${caseMaxLength}mm)` });
+                }
+            }
+            
+            if (cpu && gpu && psu) {
+                const cpuTdp = parseInt(cpu.dataset.tdp) || 0;
+                const gpuTdp = parseInt(gpu.dataset.tdp) || 0;
+                const totalTdp = cpuTdp + gpuTdp;
+                const psuWattage = parseInt(psu.dataset.wattage) || 0;
+                
+                if (totalTdp > psuWattage * 0.8) {
+                    warnings.push({ type: 'critical', msg: `❌ Power draw ${totalTdp}W may exceed PSU capacity (${psuWattage}W)` });
+                }
+            }
+            
+            if (warnings.length > 0) {
+                let html = '';
+                warnings.forEach(w => {
+                    html += `<div class="warning-item ${w.type === 'critical' ? 'critical-item' : ''}">
+                                <i class="fas ${w.type === 'critical' ? 'fa-times-circle' : 'fa-exclamation-triangle'}"></i> ${w.msg}
+                            </div>`;
+                });
+                document.getElementById('compatibilityList').innerHTML = html;
+                document.getElementById('compatibilityPanel').style.display = 'block';
+                document.getElementById('compatibilityPanel').className = `compatibility-panel ${warnings.some(w => w.type === 'critical') ? 'compatibility-critical' : 'compatibility-warning'}`;
+            } else {
+                document.getElementById('compatibilityPanel').style.display = 'none';
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            const products = document.querySelectorAll('.product-card');
+            
+            products.forEach(product => {
+                const name = product.dataset.name?.toLowerCase() || '';
+                const specs = product.querySelector('.product-specs')?.textContent.toLowerCase() || '';
+                
+                if (name.includes(searchTerm) || specs.includes(searchTerm)) {
+                    product.style.display = 'block';
+                } else {
+                    product.style.display = 'none';
+                }
+            });
+        });
+
+        function openBottleneckCalculator() {
+            const bottleneckCPU = document.getElementById('bottleneckCPU');
+            const bottleneckGPU = document.getElementById('bottleneckGPU');
+            
+            bottleneckCPU.innerHTML = '<option value="">-- Select CPU --</option>';
+            bottleneckGPU.innerHTML = '<option value="">-- Select GPU --</option>';
+            
+            const cpus = document.querySelectorAll('.product-card[data-category="cpu"]');
+            cpus.forEach(cpu => {
+                const option = document.createElement('option');
+                option.value = cpu.dataset.name;
+                option.textContent = `${cpu.dataset.name} (${cpu.dataset.perf || 'N/A'})`;
+                option.dataset.perf = cpu.dataset.perf || 50;
+                bottleneckCPU.appendChild(option);
+            });
+            
+            const gpus = document.querySelectorAll('.product-card[data-category="gpu"]');
+            gpus.forEach(gpu => {
+                const option = document.createElement('option');
+                option.value = gpu.dataset.name;
+                option.textContent = `${gpu.dataset.name} (${gpu.dataset.perf || 'N/A'})`;
+                option.dataset.perf = gpu.dataset.perf || 50;
+                bottleneckGPU.appendChild(option);
+            });
+            
+            document.getElementById('bottleneckModal').style.display = 'flex';
+        }
+
+        function calculateBottleneck() {
+            const bottleneckCPU = document.getElementById('bottleneckCPU');
+            const bottleneckGPU = document.getElementById('bottleneckGPU');
+            const cpuSelect = bottleneckCPU.options[bottleneckCPU.selectedIndex];
+            const gpuSelect = bottleneckGPU.options[bottleneckGPU.selectedIndex];
+            const resolution = document.getElementById('bottleneckResolution').value;
+            
+            if (!cpuSelect.value || !gpuSelect.value) {
+                alert('Please select both CPU and GPU');
+                return;
+            }
+            
+            const cpuPerf = parseInt(cpuSelect.dataset.perf) || 50;
+            const gpuPerf = parseInt(gpuSelect.dataset.perf) || 50;
+            
+            let resolutionMultiplier = 1;
+            if (resolution === '1080p') resolutionMultiplier = 1.2;
+            else if (resolution === '1440p') resolutionMultiplier = 1;
+            else if (resolution === '4k') resolutionMultiplier = 0.8;
+            
+            const adjustedCpuPerf = cpuPerf * resolutionMultiplier;
+            
+            let bottleneck = 0;
+            let status = '';
+            let message = '';
+            
+            if (adjustedCpuPerf < gpuPerf) {
+                bottleneck = Math.round(((gpuPerf - adjustedCpuPerf) / gpuPerf) * 100);
+                status = 'CPU Bottleneck';
+                message = 'Your CPU is limiting your GPU. Consider upgrading your CPU.';
+            } else if (gpuPerf < adjustedCpuPerf) {
+                bottleneck = Math.round(((adjustedCpuPerf - gpuPerf) / adjustedCpuPerf) * 100);
+                status = 'GPU Bottleneck';
+                message = 'Your GPU is limiting your system. Consider upgrading your GPU.';
+            } else {
+                bottleneck = 0;
+                status = 'Balanced';
+                message = 'Your components are well balanced!';
+            }
+            
+            bottleneck = Math.min(bottleneck, 100);
+            
+            document.getElementById('bottleneckPercentage').textContent = bottleneck + '%';
+            document.getElementById('bottleneckStatus').textContent = status;
+            document.getElementById('bottleneckBar').style.width = bottleneck + '%';
+            
+            if (bottleneck < 10) {
+                document.getElementById('bottleneckBar').style.background = '#4caf50';
+            } else if (bottleneck < 20) {
+                document.getElementById('bottleneckBar').style.background = '#ff9800';
+            } else {
+                document.getElementById('bottleneckBar').style.background = '#f44336';
+            }
+            
+            document.getElementById('bottleneckMessage').textContent = message;
+            document.getElementById('bottleneckResult').style.display = 'block';
+        }
+
+        const bottleneckBtn = document.getElementById('bottleneckBtn');
+        const bottleneckModal = document.getElementById('bottleneckModal');
+        const closeBottleneck = document.getElementById('closeBottleneck');
+
+        bottleneckBtn.addEventListener('click', openBottleneckCalculator);
+        closeBottleneck.addEventListener('click', () => bottleneckModal.style.display = 'none');
+
+        const brandsModal = document.getElementById('brandsModal');
+        const closeBrands = document.getElementById('closeBrands');
+
+        closeBrands.addEventListener('click', function() {
+            brandsModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(e) {
+            if (e.target === brandsModal) {
+                brandsModal.style.display = 'none';
+            }
+            if (e.target === bottleneckModal) {
+                bottleneckModal.style.display = 'none';
+            }
+        });
+
+        document.getElementById('screenshotBtn').addEventListener('click', function() {
+            html2canvas(document.querySelector('.main-layout')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'pcmoto-build.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        });
+
+        document.getElementById('pdfBtn').addEventListener('click', function() {
+            html2canvas(document.querySelector('.main-layout')).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF();
+                pdf.addImage(imgData, 'PNG', 10, 10, 190, 0);
+                pdf.save('pcmoto-build.pdf');
+            });
+        });
+
+        updateAuthUI();
+        
+        document.getElementById('category-processor').style.display = 'block';
+        document.getElementById('icon-processor').className = 'fas fa-chevron-up';
+        
+        loadAllProducts();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
